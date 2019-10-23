@@ -1,0 +1,53 @@
+package com.semafoor.semaforce.model.entities.result;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
+
+// todo: extend abstract entity. Database needs to be recreated after that.
+
+/**
+ * Defines the WeeklyResult entity.
+ */
+@Data
+@EqualsAndHashCode(callSuper=false)
+@Entity
+public class WeeklyResult {
+
+    @Id
+    @GeneratedValue(generator = "ID_GENERATOR")
+    private Long id;
+
+    @NotNull(message = "Week number must be set")
+    private int weekNumber;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    @JsonBackReference
+    private Result result;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyColumn(name = "SET_NUMBER")
+    private Map<Integer, Score> numbersLifted = new HashMap<>();
+
+    WeeklyResult(){}
+
+    public WeeklyResult(int weekNumber, Map<Integer, Score> numbersLifted) {
+        this.weekNumber = weekNumber;
+        this.numbersLifted = numbersLifted;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public int getWeekNumber() {
+        return weekNumber;
+    }
+}
