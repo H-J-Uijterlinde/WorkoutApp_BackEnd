@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class responsible for exposing endpoints for receiving and sending http requests containing the User
+ * entity or its derivatives.
+ */
 @Controller
 @RequestMapping("/users")
 @CrossOrigin
