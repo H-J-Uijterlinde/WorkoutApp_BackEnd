@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * This service class serves as the bridge between the data access layer and the controller layer for the Muscle
+ * entity. This class is where the business logic can be implemented.
+ */
 @Service
 @Transactional
 public class MuscleService {
