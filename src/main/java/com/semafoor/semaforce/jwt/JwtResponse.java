@@ -1,17 +1,19 @@
 package com.semafoor.semaforce.jwt;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
 /**
- * This class represents the response send after successful authentication. It contains the Jwt token
+ * This class represents the JSON response sent by the authentication mechanism and contains the jwt token.
  */
-@Data
 public class JwtResponse implements Serializable {
 
     private final String jwttoken;
 
+    public JwtResponse(String jwttoken) {
+        this.jwttoken = jwttoken;
+    }
+
+    public String getToken() {
+        return this.jwttoken;
+    }
 }
