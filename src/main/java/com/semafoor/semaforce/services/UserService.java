@@ -39,6 +39,13 @@ public class UserService {
         return Lists.newArrayList(userRepository.findAll());
     }
 
+    /**
+     * Method that returns a UserView object based on whether or not the user already has a current workout.
+     *
+     * @param username users username.
+     *
+     * @return UserView object.
+     */
     @Transactional(readOnly = true)
     public UserView findUserByUsername(String username) {
         User user = this.userRepository.findByUserName(username);

@@ -21,6 +21,14 @@ public class TrainingDayService {
     @Autowired
     private TrainingDayRepository trainingDayRepository;
 
+    /**
+     * Method that adds new weekly results to a TrainingDay entity. Also updates the currentWeek number.
+     *
+     * @param trainingDayId Id of the TrainingDay entity the results need to be added to.
+     * @param weeklyResultDtos List of new WeeklyResult entities.
+     *
+     * @return The updated TrainingDay entity
+     */
     public TrainingDay addWeeklyResult(Long trainingDayId, List<WeeklyResultDto> weeklyResultDtos) {
 
         TrainingDay trainingDay = trainingDayRepository.findById(trainingDayId).orElseThrow(() -> new RuntimeException("TrainingDay not found."));
