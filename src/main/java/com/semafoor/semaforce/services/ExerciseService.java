@@ -1,6 +1,7 @@
 package com.semafoor.semaforce.services;
 
 import com.google.common.collect.Lists;
+import com.semafoor.semaforce.model.entities.exercise.Category;
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
 import com.semafoor.semaforce.model.view.ExerciseView;
 import com.semafoor.semaforce.repositories.ExerciseRepository;
@@ -38,6 +39,11 @@ public class ExerciseService {
     @Transactional(readOnly = true)
     public Exercise findById(Long id) {
         return repository.findById(id).get();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ExerciseView> getExerciseViewsByCriteria(String name, Category category, Long muscleId) {
+        return repository.findExercisesByCriteriaQuery(name, category, muscleId);
     }
 
     public Exercise save(Exercise exercise) {

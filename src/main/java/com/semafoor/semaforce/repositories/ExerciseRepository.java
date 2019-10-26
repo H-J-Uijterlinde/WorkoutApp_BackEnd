@@ -2,6 +2,7 @@ package com.semafoor.semaforce.repositories;
 
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
 import com.semafoor.semaforce.model.view.ExerciseView;
+import com.semafoor.semaforce.repositories.custom_repos.CustomExerciseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ import java.util.List;
  * Queries for the function which are not defined through the CrudRepository interface are defined as named queries on
  * the corresponding class.
  */
-public interface ExerciseRepository extends CrudRepository<Exercise, Long> {
+public interface ExerciseRepository extends CrudRepository<Exercise, Long>, CustomExerciseRepository {
 
     List<ExerciseView> getExerciseViews();
 
