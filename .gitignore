@@ -5,6 +5,7 @@ build/
 !**/src/main/**
 !**/src/test/**
 /src/main/resources/jdbc.properties
+/src/main/resources/security.properties
 
 ### STS ###
 .apt_generated
