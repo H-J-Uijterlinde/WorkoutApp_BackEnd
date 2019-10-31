@@ -3,6 +3,7 @@ package com.semafoor.semaforce.repositories.custom_repos;
 import com.semafoor.semaforce.model.entities.exercise.Category;
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
 import com.semafoor.semaforce.model.entities.exercise.Muscle;
+import com.semafoor.semaforce.model.entities.exercise.MuscleGroup;
 import com.semafoor.semaforce.model.view.ExerciseView;
 import org.springframework.stereotype.Service;
 
@@ -30,18 +31,19 @@ public class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
      *
      * @param name name or part of the exercise name to be used in a where clause.
      * @param category category enum value to be used in the where clause.
+     * @param muscleGroup muscleGroup enum value to be used in the where clause.
      * @param muscleId id of a Muscle entity to be used in the where clause.
      *
      * @return list of ExerciseView objects.
      */
     @Override
-    public List<ExerciseView> findExercisesByCriteriaQuery(String name, Category category, Long muscleId) {
+    public List<ExerciseView> findExercisesByCriteriaQuery(String name, Category category, MuscleGroup muscleGroup, Long muscleId) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ExerciseView> c = cb.createQuery(ExerciseView.class);
         Root<Exercise> exerciseRoot = c.from(Exercise.class);
-        Join<Exercise, Muscle> muscle = exerciseRoot.join("primaryMuscleTrained", JoinType.LEFT);
-        c.multiselect(exerciseRoot.get("id"), exerciseRoot.get("name"), muscle.get("name"), exerciseRoot.get("category"));
+        Join<Exercise, Muscle> muscle = exerciseRoot.join("musclesTrained", JoinType.LEFT);
+        c.multiselect(exerciseRoot.get("id"), exerciseRoot.get("name"), exerciseRoot.get("muscleGroup"), exerciseRoot.get("category")).distinct(true);
 
         // Each where clause is represented by a predicate. A list of predicates is created based on the arguments provided.
         List<Predicate> criteria = new ArrayList<>();
@@ -53,6 +55,11 @@ public class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
         if (category != null) {
             ParameterExpression<Category> p = cb.parameter(Category.class, "category");
             criteria.add(cb.equal(exerciseRoot.<Category>get("category"), p));
+        }
+
+        if (muscleGroup != null) {
+            ParameterExpression<MuscleGroup> p = cb.parameter(MuscleGroup.class, "muscleGroup");
+            criteria.add(cb.equal(exerciseRoot.<MuscleGroup>get("muscleGroup"), p));
         }
 
         if (muscleId != null) {
@@ -73,6 +80,7 @@ public class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
         TypedQuery<ExerciseView> q = em.createQuery(c);
         if (name != null) q.setParameter("name", "%" + name + "%");
         if (category != null) q.setParameter("category", category);
+        if (muscleGroup != null) q.setParameter("muscleGroup", muscleGroup);
         if (muscleId != null) q.setParameter("muscleId", muscleId);
         return q.getResultList();
     }

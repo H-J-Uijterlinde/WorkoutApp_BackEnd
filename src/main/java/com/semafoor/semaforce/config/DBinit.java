@@ -3,6 +3,7 @@ package com.semafoor.semaforce.config;
 import com.semafoor.semaforce.model.entities.exercise.Category;
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
 import com.semafoor.semaforce.model.entities.exercise.Muscle;
+import com.semafoor.semaforce.model.entities.exercise.MuscleGroup;
 import com.semafoor.semaforce.model.entities.user.AccountInfo;
 import com.semafoor.semaforce.model.entities.user.User;
 import com.semafoor.semaforce.model.entities.workout.ExerciseConfiguration;
@@ -62,7 +63,7 @@ public class DBinit {
         Set<Muscle> muscles = new HashSet<>();
         muscles.add(muscle);
         muscles.add(tricep);
-        return new Exercise("test exercise", muscles, muscle, Category.Main);
+        return new Exercise("test exercise", muscles, MuscleGroup.Arms, Category.Main);
     }
 
     private User createTestUser() {

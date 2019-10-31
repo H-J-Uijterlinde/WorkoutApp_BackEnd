@@ -32,6 +32,11 @@ public class MuscleController {
         return ResponseEntity.ok(this.service.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Muscle> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(this.service.findById(id));
+    }
+
     @GetMapping("/view")
     public ResponseEntity<List<MuscleView>> findAllViews() {
         return ResponseEntity.ok(this.service.getAllMuscleViews());

@@ -2,6 +2,7 @@ package com.semafoor.semaforce.controllers;
 
 import com.semafoor.semaforce.model.entities.exercise.Category;
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
+import com.semafoor.semaforce.model.entities.exercise.MuscleGroup;
 import com.semafoor.semaforce.model.view.ExerciseView;
 import com.semafoor.semaforce.services.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class ExerciseController {
         return ResponseEntity.ok(this.service.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Exercise> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(this.service.findById(id));
+    }
+
     @GetMapping("/view")
     public ResponseEntity<List<ExerciseView>> findAllViews() {
         return ResponseEntity.ok(this.service.getExerciseViews());
@@ -48,12 +54,13 @@ public class ExerciseController {
      *
      * @return ResponseEntity containing a list of ExerciseView objects.
      */
-    @GetMapping("/view/nameContains={name}/category={category}/muscleId={muscleId}")
+    @GetMapping("/view/nameContains={name}/category={category}/muscleGroup={muscleGroup}/muscleId={muscleId}")
     public ResponseEntity<List<ExerciseView>> findViewsByCriteria(@PathVariable(value = "name", required = false) String name,
                                                                   @PathVariable(value = "category", required = false)Category category,
+                                                                  @PathVariable(value = "muscleGroup", required = false) MuscleGroup muscleGroup,
                                                                   @PathVariable(value = "muscleId", required = false) Long muscleId) {
 
-        return ResponseEntity.ok(this.service.getExerciseViewsByCriteria(name, category, muscleId));
+        return ResponseEntity.ok(this.service.getExerciseViewsByCriteria(name, category, muscleGroup, muscleId));
     }
 
     @PostMapping

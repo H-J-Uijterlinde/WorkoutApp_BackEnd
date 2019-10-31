@@ -56,7 +56,6 @@ public class MuscleService {
 
     public void delete(Long id) {
         Muscle muscle = muscleRepository.findById(id).get();
-        exerciseRepository.deletePrimaryMuscleTrained(id);
         muscleRepository.delete(muscle);
     }
 }

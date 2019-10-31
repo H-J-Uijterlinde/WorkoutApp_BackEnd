@@ -6,6 +6,5 @@ package com.semafoor.semaforce.model.entities.exercise;
 public enum Category {
     Main,
     Assistance,
-    Accessory,
-    MAIN
+    Accessory
 }

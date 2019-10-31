@@ -19,13 +19,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(
                 name = "Exercise.getExerciseViews",
-                query = "select new com.semafoor.semaforce.model.view.ExerciseView(E.id, E.name, P.name, E.category) from Exercise E " +
-                        "join E.primaryMuscleTrained as P"
-        ),
-        @NamedQuery(
-                name = "Exercise.deletePrimaryMuscleTrained",
-                query = "Update Exercise E Set E.primaryMuscleTrained = NULL " +
-                        "where E.primaryMuscleTrained.id = :id"
+                query = "select new com.semafoor.semaforce.model.view.ExerciseView(E.id, E.name, E.muscleGroup, E.category) from Exercise E "
         )
 })
 public class Exercise extends AbstractEntity {
@@ -50,9 +44,9 @@ public class Exercise extends AbstractEntity {
     )
     private Set<Muscle> musclesTrained = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "PRIMARY_MUSCLES_ID")
-    private Muscle primaryMuscleTrained;
+    @NotNull(message = "The muscle group for this exercise must be set")
+    @Enumerated(EnumType.STRING)
+    private MuscleGroup muscleGroup;
 
     @NotNull(message = "The category for this exercise must be set")
     @Enumerated(EnumType.STRING)
@@ -61,10 +55,10 @@ public class Exercise extends AbstractEntity {
     Exercise() {
     }
 
-    public Exercise(String name, Set<Muscle> musclesTrained, Muscle primaryMuscleTrained, Category category) {
+    public Exercise(String name, Set<Muscle> musclesTrained, MuscleGroup muscleGroup, Category category) {
         this.name = name;
         this.musclesTrained = musclesTrained;
-        this.primaryMuscleTrained = primaryMuscleTrained;
+        this.muscleGroup = muscleGroup;
         this.category = category;
     }
 }

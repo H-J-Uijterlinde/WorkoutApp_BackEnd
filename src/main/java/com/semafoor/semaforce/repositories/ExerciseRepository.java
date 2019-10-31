@@ -17,7 +17,4 @@ import java.util.List;
 public interface ExerciseRepository extends CrudRepository<Exercise, Long>, CustomExerciseRepository {
 
     List<ExerciseView> getExerciseViews();
-
-    @Modifying
-    void deletePrimaryMuscleTrained(@Param("id") Long id);
 }

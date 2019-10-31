@@ -3,6 +3,7 @@ package com.semafoor.semaforce.services;
 import com.google.common.collect.Lists;
 import com.semafoor.semaforce.model.entities.exercise.Category;
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
+import com.semafoor.semaforce.model.entities.exercise.MuscleGroup;
 import com.semafoor.semaforce.model.view.ExerciseView;
 import com.semafoor.semaforce.repositories.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,8 @@ public class ExerciseService {
     }
 
     @Transactional(readOnly = true)
-    public List<ExerciseView> getExerciseViewsByCriteria(String name, Category category, Long muscleId) {
-        return repository.findExercisesByCriteriaQuery(name, category, muscleId);
+    public List<ExerciseView> getExerciseViewsByCriteria(String name, Category category, MuscleGroup muscleGroup, Long muscleId) {
+        return repository.findExercisesByCriteriaQuery(name, category, muscleGroup, muscleId);
     }
 
     public Exercise save(Exercise exercise) {

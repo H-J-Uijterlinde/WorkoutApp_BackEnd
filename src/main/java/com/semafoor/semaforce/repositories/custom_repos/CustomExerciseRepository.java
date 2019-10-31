@@ -1,6 +1,7 @@
 package com.semafoor.semaforce.repositories.custom_repos;
 
 import com.semafoor.semaforce.model.entities.exercise.Category;
+import com.semafoor.semaforce.model.entities.exercise.MuscleGroup;
 import com.semafoor.semaforce.model.view.ExerciseView;
 
 import java.util.List;
@@ -11,5 +12,5 @@ import java.util.List;
  */
 public interface CustomExerciseRepository {
 
-    List<ExerciseView> findExercisesByCriteriaQuery(String name, Category category, Long muscleId);
+    List<ExerciseView> findExercisesByCriteriaQuery(String name, Category category, MuscleGroup muscleGroup, Long muscleId);
 }
