@@ -28,6 +28,12 @@ import java.util.Map;
                 query = "select T from Workout W " +
                         "join W.trainingDays as T " +
                         "where W.id = :id and KEY(T) = :dayNumber"
+        ),
+        @NamedQuery(
+                name = "Workout.getAllTrainingDaysFromWorkout",
+                query = "Select T from Workout W " +
+                        "join W.trainingDays as T " +
+                        "where W.id = :id"
         )
 })
 public class Workout extends AbstractEntity implements Serializable {

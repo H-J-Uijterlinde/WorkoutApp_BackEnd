@@ -40,6 +40,12 @@ public class WorkoutController {
         return ResponseEntity.ok(this.workoutService.getTrainingDayByWorkoutId(id, dayNumber));
     }
 
+    @GetMapping("/{id}/training_days")
+    public ResponseEntity<List<TrainingDay>> getAllTrainingDaysByWorkoutId(@PathVariable("id") Long id) {
+
+        return ResponseEntity.ok(this.workoutService.getAllTrainingDaysFromWorkout(id));
+    }
+
     @PostMapping
     public ResponseEntity<Workout> createWorkout(@RequestBody WorkoutDto workout) {
         Workout savedWorkout = this.workoutService.save(workout.transform());

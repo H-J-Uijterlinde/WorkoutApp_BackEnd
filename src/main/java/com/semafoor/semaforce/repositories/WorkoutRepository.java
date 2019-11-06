@@ -20,6 +20,8 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     TrainingDay getTrainingDay(@Param("id") Long workoutId, @Param("dayNumber") int dayNumber);
 
+    List<TrainingDay> getAllTrainingDaysFromWorkout(@Param("id") Long workoutId);
+
     @Modifying
     void deleteAllTrainingDays(@Param("workouts") List<Workout> workouts);
 }

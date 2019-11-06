@@ -44,6 +44,11 @@ public class WorkoutService {
         return this.repository.getTrainingDay(id, dayNumber);
     }
 
+    @Transactional(readOnly = true)
+    public List<TrainingDay> getAllTrainingDaysFromWorkout(Long id) {
+        return this.repository.getAllTrainingDaysFromWorkout(id);
+    }
+
     public Workout save(Workout workout) {
 
         User user = userRepository.findById(workout.getUser().getId()).get();
