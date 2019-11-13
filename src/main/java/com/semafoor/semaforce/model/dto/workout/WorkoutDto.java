@@ -1,4 +1,4 @@
-package com.semafoor.semaforce.model.dto;
+package com.semafoor.semaforce.model.dto.workout;
 
 import com.semafoor.semaforce.model.entities.result.Result;
 import com.semafoor.semaforce.model.entities.user.User;

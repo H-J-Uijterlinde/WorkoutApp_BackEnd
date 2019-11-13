@@ -1,6 +1,6 @@
 package com.semafoor.semaforce.controllers;
 
-import com.semafoor.semaforce.model.dto.WorkoutDto;
+import com.semafoor.semaforce.model.dto.workout.WorkoutDto;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.entities.workout.Workout;
 import com.semafoor.semaforce.services.WorkoutService;

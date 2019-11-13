@@ -1,6 +1,6 @@
 package com.semafoor.semaforce.controllers;
 
-import com.semafoor.semaforce.model.dto.WeeklyResultDto;
+import com.semafoor.semaforce.model.dto.results.WeeklyResultDto;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.services.TrainingDayService;
 import org.springframework.beans.factory.annotation.Autowired;

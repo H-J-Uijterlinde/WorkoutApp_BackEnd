@@ -1,4 +1,4 @@
-package com.semafoor.semaforce.model.dto;
+package com.semafoor.semaforce.model.dto.results;
 
 import com.semafoor.semaforce.model.entities.result.Score;
 import com.semafoor.semaforce.model.entities.result.WeeklyResult;

@@ -1,6 +1,6 @@
 package com.semafoor.semaforce.services;
 
-import com.semafoor.semaforce.model.dto.WeeklyResultDto;
+import com.semafoor.semaforce.model.dto.results.WeeklyResultDto;
 import com.semafoor.semaforce.model.entities.result.Result;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.repositories.TrainingDayRepository;
@@ -21,6 +21,9 @@ public class TrainingDayService {
     @Autowired
     private TrainingDayRepository trainingDayRepository;
 
+    @Autowired
+    private GoalsService goalsService;
+
     /**
      * Method that adds new weekly results to a TrainingDay entity. Also updates the currentWeek number.
      *
@@ -37,6 +40,8 @@ public class TrainingDayService {
             Result result = trainingDay.getScheduledExercises().get(dto.getExerciseNumber()).getResults();
             result.addResult(dto.transform());
         }
+
+        this.goalsService.updateActiveGoals(trainingDay);
 
         trainingDay.setCurrentWeek(trainingDay.getCurrentWeek() + 1);
         return trainingDayRepository.save(trainingDay);
