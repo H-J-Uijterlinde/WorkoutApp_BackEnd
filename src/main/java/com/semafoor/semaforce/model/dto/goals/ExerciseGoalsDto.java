@@ -8,11 +8,13 @@ import lombok.Data;
 @Data
 public class ExerciseGoalsDto {
 
+    Long id;
     User user;
     Exercise exercise;
     int desiredReps;
     int desiredSets;
     int desiredWeight;
+    int startingVolume;
 
     public ExerciseGoalsDto() {}
 
@@ -26,7 +28,14 @@ public class ExerciseGoalsDto {
             subTitle = this.desiredReps + " x " + this.desiredWeight + " kg";
         }
 
-        return new ExerciseGoals(this.user, true, 0, this.exercise,
-                this.desiredReps, this.desiredSets, this.desiredWeight, title, subTitle);
+        ExerciseGoals goal = new ExerciseGoals(this.user, true, 0, this.exercise,
+                this.desiredReps, this.desiredSets, this.desiredWeight, title, subTitle, startingVolume);
+
+
+        if (id != null) {
+            goal.setId(id);
+        }
+
+        return goal;
     }
 }

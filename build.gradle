@@ -74,4 +74,8 @@ dependencies {
 	compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
 
 	compile("org.springframework.boot:spring-boot-starter-actuator")
+
+	// https://mvnrepository.com/artifact/org.liquibase/liquibase-core
+	compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.0'
+
 }

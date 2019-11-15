@@ -1,5 +1,4 @@
 package com.semafoor.semaforce.model.entities.goals;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.semafoor.semaforce.model.entities.exercise.Exercise;
 import com.semafoor.semaforce.model.entities.user.User;
@@ -8,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class ExerciseGoals extends Goals {
 
     @NotNull(message = "The exercise for this goal must be set")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     private Exercise exercise;
 
@@ -31,10 +31,14 @@ public class ExerciseGoals extends Goals {
     @NotNull(message = "The desired weight for this goal must be set")
     private int desiredWeight;
 
-    ExerciseGoals(){}
+    @NotNull(message = "A starting volume for this goal must be set")
+    private int startingVolume;
+
+    ExerciseGoals() {
+    }
 
     public ExerciseGoals(User user, boolean active, int completionPercentage, Exercise exercise, int desiredReps,
-                         int desiredSets, int desiredWeight, String title, String subTitle) {
+                         int desiredSets, int desiredWeight, String title, String subTitle, int startingVolume) {
         this.user = user;
         this.active = active;
         this.completionPercentage = completionPercentage;
@@ -44,5 +48,6 @@ public class ExerciseGoals extends Goals {
         this.desiredWeight = desiredWeight;
         this.title = title;
         this.subTitle = subTitle;
+        this.startingVolume= startingVolume;
     }
 }

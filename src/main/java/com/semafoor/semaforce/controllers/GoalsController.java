@@ -39,13 +39,24 @@ public class GoalsController {
         return new ResponseEntity<>(this.service.postNewGoal(exerciseGoals), HttpStatus.CREATED);
     }
 
+    @PutMapping("/exercise_goals")
+    public ResponseEntity<Goals> updateExerciseGoals(@RequestBody ExerciseGoalsDto goals) {
+        return new ResponseEntity<>(this.service.updateGoal(goals.transform()), HttpStatus.OK);
+    }
+
     @GetMapping("/view/user={id}")
-    public ResponseEntity<List<GoalsView>> getAllGoalsByUserId(@PathVariable("id") Long id) {
+    public ResponseEntity<List<GoalsView>> getAllGoalsViewsByUserId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(this.service.getAllGoalsViews(id));
     }
 
     @GetMapping("/user={id}")
     public ResponseEntity<List<Goals>> findAllGoalsByUserId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(this.service.findAllGoalsByUserId(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteGoals(@PathVariable("id") Long id) {
+        this.service.deleteGoal(id);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
         @NamedQuery(
                 name = "Goals.getAllGoalsViews",
-                query = "select new com.semafoor.semaforce.model.view.GoalsView(G.title, G.subTitle, G.completionPercentage) " +
+                query = "select new com.semafoor.semaforce.model.view.GoalsView(G.id, G.title, G.subTitle, G.completionPercentage) " +
                         "from Goals G " +
                         "join G.user U " +
                         "where U.id = :userId"
