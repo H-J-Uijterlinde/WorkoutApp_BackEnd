@@ -38,10 +38,11 @@ public class TrainingDayService {
 
         for (WeeklyResultDto dto: weeklyResultDtos) {
             Result result = trainingDay.getScheduledExercises().get(dto.getExerciseNumber()).getResults();
+            dto.setExerciseId(result.getExercise().getId());
             result.addResult(dto.transform());
         }
 
-        this.goalsService.updateActiveGoals(trainingDay);
+        this.goalsService.updateActiveGoals(trainingDay, weeklyResultDtos);
 
         trainingDay.setCurrentWeek(trainingDay.getCurrentWeek() + 1);
         return trainingDayRepository.save(trainingDay);

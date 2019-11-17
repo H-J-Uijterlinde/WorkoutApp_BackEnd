@@ -20,6 +20,8 @@ public class WeeklyResultDto {
     private List<Integer> repetitionsPerformed;
     private List<Integer> rpe;
 
+    private Long exerciseId;
+
     /**
      * Method that can be called on a WeeklyResultDto object, to transform it into a WeeklyResult entity
      * @return  WeeklyResult entity
