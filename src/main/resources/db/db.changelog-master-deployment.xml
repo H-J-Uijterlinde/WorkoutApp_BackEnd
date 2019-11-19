@@ -3,33 +3,5 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet author="Henk-Jan Uijterlinde"
-               id="modifyDataType-rpe/weight-table-weeklyresult_numberslifted"
-               objectQuotingStrategy="LEGACY">
-        <modifyDataType columnName="rpe"
-                        newDataType="float"
-                        schemaName="semaforcedb"
-                        tableName="weeklyresult_numberslifted"/>
-        <modifyDataType columnName="weightlifted"
-                        newDataType="float"
-                        schemaName="semaforcedb"
-                        tableName="weeklyresult_numberslifted"/>
-    </changeSet>
-
-    <changeSet author="Henk-Jan Uijterlinde"
-               id="add-abstractEntity-columns-to-weeklyResult-table"
-               objectQuotingStrategy="LEGACY">
-        <addColumn schemaName="semaforcedb"
-                   tableName="WeeklyResult">
-            <column name="createdBy" type="varchar(255)"
-                    value="Semafoor"/>
-            <column name="modifiedBy" type="varchar(255)"
-                    value="Semafoor"/>
-            <column name="createdDateTime" type="dateTime"
-                    value="2019-11-19 09:57:39"/>
-            <column name="modifiedDateTime" type="dateTime"
-                    value="2019-11-19 09:57:39"/>
-        </addColumn>
-    </changeSet>
 
 </databaseChangeLog>
