@@ -6,12 +6,12 @@ import com.semafoor.semaforce.model.entities.goals.ExerciseGoals;
 import com.semafoor.semaforce.model.entities.goals.Goals;
 import com.semafoor.semaforce.model.entities.goals.TotalWorkouts;
 import com.semafoor.semaforce.model.entities.result.Result;
-import com.semafoor.semaforce.model.entities.result.Score;
 import com.semafoor.semaforce.model.entities.result.WeeklyResult;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.view.GoalsView;
 import com.semafoor.semaforce.repositories.GoalsRepository;
 import com.semafoor.semaforce.repositories.ResultRepository;
+import com.semafoor.semaforce.services.utilities.ResultUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
@@ -33,21 +30,23 @@ public class GoalsService {
 
     private final GoalsRepository goalsRepository;
     private final ResultRepository resultRepository;
+    private final ResultUtilities resultUtils;
 
     @Autowired
-    public GoalsService(GoalsRepository goalsRepository, ResultRepository resultRepository) {
+    public GoalsService(GoalsRepository goalsRepository, ResultRepository resultRepository, ResultUtilities resultUtils) {
         this.goalsRepository = goalsRepository;
         this.resultRepository = resultRepository;
+        this.resultUtils = resultUtils;
     }
 
     @Transactional(readOnly = true)
     public List<Goals> findAllGoalsByUserId(Long id) {
-        return Lists.newArrayList(this.goalsRepository.findAllByUser_Id(id));
+        return Lists.newArrayList(this.goalsRepository.findAllByUser_IdAndActive(id, true));
     }
 
     @Transactional(readOnly = true)
-    public List<GoalsView> getAllGoalsViews(Long id) {
-        return goalsRepository.getAllGoalsViews(id);
+    public List<GoalsView> getAllGoalsViews(Long id, boolean isActive) {
+        return goalsRepository.getAllGoalsViews(id, isActive);
     }
 
     public Goals postNewGoal(Goals goal) {
@@ -71,6 +70,7 @@ public class GoalsService {
 
     private void setStartingVolume(ExerciseGoals goal) {
         // get results for current user for exercise corresponding with the goal
+        // Todo: check only results from last year
         List<Result> resultsForExercise = resultRepository.findAllByExerciseAndUser(goal.getExercise(), goal.getUser());
 
         // obtain a stream of relevant weekly results
@@ -78,8 +78,7 @@ public class GoalsService {
 
 
         OptionalDouble startingVolume = relevantWeeklyResults.
-                mapToDouble(weeklyResult -> getAverageRepsPerformed(weeklyResult) * getAverageWeightLifted(weeklyResult)
-                        * goal.getDesiredSets()).max();
+                mapToDouble(weeklyResult -> this.calculateEstimatedTotalVolume(goal, weeklyResult)).max();
 
         goal.setStartingVolume((int) startingVolume.orElse(0));
     }
@@ -100,39 +99,35 @@ public class GoalsService {
         return weeklyResultStream.filter(weeklyResults -> weeklyResults.getNumbersLifted().size() >= goal.getDesiredSets() - 1).
 
                 // filter for results where the average number of repetitions is between the desired reps of the goal
-                // plus or minus one. Or results where the average weight lifted is within a 5% margin of the desired weight
-                        filter(weeklyResult -> (getAverageRepsPerformed(weeklyResult) >= goal.getDesiredReps() - 1
-                        && getAverageRepsPerformed(weeklyResult) <= goal.getDesiredReps() + 1) ||
-                        (getAverageWeightLifted(weeklyResult) >= goal.getDesiredWeight() - (goal.getDesiredWeight() * 0.05) &&
-                                getAverageWeightLifted(weeklyResult) <= goal.getDesiredWeight() + (goal.getDesiredWeight() * 0.05)));
+                // plus or minus two. Or results where the average weight lifted is within a 5% margin of the desired weight
+                        filter(weeklyResult -> (this.resultUtils.getAverageRepsPerformed(weeklyResult) >= goal.getDesiredReps() - 2
+                        && this.resultUtils.getAverageRepsPerformed(weeklyResult) <= goal.getDesiredReps() + 2) ||
+                        (this.resultUtils.getAverageWeightLifted(weeklyResult) >= goal.getDesiredWeight() - (goal.getDesiredWeight() * 0.05) &&
+                                this.resultUtils.getAverageWeightLifted(weeklyResult) <= goal.getDesiredWeight() + (goal.getDesiredWeight() * 0.05)));
     }
 
-    private double getAverageRepsPerformed(WeeklyResult weeklyResult) {
+    private double calculateEstimatedTotalVolume(ExerciseGoals goal, WeeklyResult weeklyResult) {
 
-        OptionalDouble averageRepsForWeeklyResult = weeklyResult.getNumbersLifted().values().stream().
-                mapToInt(Score -> Score.getRepetitionsPerformed() + (10 - Score.getRpe())).average();
+        double weightForDesiredRepNumber = this.resultUtils.getWeightForDesiredRepNumber(goal.getDesiredReps(), weeklyResult);
 
-        return averageRepsForWeeklyResult.orElseThrow(() -> new RuntimeException("No repetitions have been set for this result"));
-    }
-
-    private double getAverageWeightLifted(WeeklyResult weeklyResult) {
-
-        OptionalDouble averageWeightForWeeklyResult = weeklyResult.getNumbersLifted().values().stream().
-                mapToInt(Score::getWeightLifted).average();
-
-        return averageWeightForWeeklyResult.orElseThrow(() -> new RuntimeException("No weights have been set for this result"));
+        return Math.floor(weightForDesiredRepNumber * goal.getDesiredReps() * goal.getDesiredSets());
     }
 
     void updateActiveGoals(TrainingDay trainingDay, List<WeeklyResultDto> weeklyResultDtos) {
         Long userId = trainingDay.getScheduledExercises().get(1).getResults().getUser().getId();
-        //todo: filter for active goals
+
         List<Goals> goals = this.findAllGoalsByUserId(userId);
 
-        // update the total workout goals
-        goals.stream().filter(goal -> goal instanceof TotalWorkouts).forEach(goal -> ((TotalWorkouts) goal).updateCompletionPercentage());
+        // update the TotalWorkout goals
+        goals.stream().filter(goal -> goal instanceof TotalWorkouts).forEach(goal -> {
+            ((TotalWorkouts) goal).updateCompletionPercentage();
+            if (goal.getCompletionPercentage() >= 100) {
+                goal.setActive(false);
+            }
+        });
 
         // check if current exercise goals need to be updated
-        goals.stream().filter(goal -> goal instanceof ExerciseGoals).forEach(goal -> updateCompletionPercentage((ExerciseGoals) goal, weeklyResultDtos));
+        goals.stream().filter(goal -> goal instanceof ExerciseGoals).forEach(goal -> this.updateCompletionPercentage((ExerciseGoals) goal, weeklyResultDtos));
     }
 
     private void updateCompletionPercentage(ExerciseGoals goal, List<WeeklyResultDto> weeklyResultDtos) {
@@ -147,20 +142,21 @@ public class GoalsService {
         // if starting volume is set, check if completion percentage needs to be updated.
         if (goal.getStartingVolume() != 0) {
             relevantResults.mapToDouble(weeklyResult -> {
-                double totalVolume = getAverageRepsPerformed(weeklyResult) * getAverageWeightLifted(weeklyResult)
-                        * goal.getDesiredSets();
+                double totalVolume = calculateEstimatedTotalVolume(goal, weeklyResult);
                 double desiredTotalVolume = goal.getDesiredReps() * goal.getDesiredSets() * goal.getDesiredWeight();
                 return ((totalVolume - goal.getStartingVolume()) / (desiredTotalVolume - goal.getStartingVolume())) * 100;
             }).forEach(completionPercentage -> {
                 if (completionPercentage > goal.getCompletionPercentage()) {
                     goal.setCompletionPercentage((int) completionPercentage);
+                    if (completionPercentage >= 100) {
+                        goal.setActive(false);
+                    }
                 }
             });
             // else if starting volume has not been set, check if starting volume can be set from relevant results.
         } else if (goal.getStartingVolume() == 0) {
             OptionalDouble startingVolume = relevantResults.
-                    mapToDouble(weeklyResult -> getAverageRepsPerformed(weeklyResult) * getAverageWeightLifted(weeklyResult)
-                            * goal.getDesiredSets()).max();
+                    mapToDouble(weeklyResult -> this.calculateEstimatedTotalVolume(goal, weeklyResult)).max();
 
             goal.setStartingVolume((int) startingVolume.orElse(0));
         }

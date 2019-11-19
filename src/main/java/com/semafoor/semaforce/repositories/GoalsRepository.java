@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GoalsRepository extends CrudRepository<Goals, Long> {
 
-    List<Goals> findAllByUser_Id(Long id);
+    List<Goals> findAllByUser_IdAndActive(Long id, boolean isActive);
 
-    List<GoalsView> getAllGoalsViews(@Param("userId") Long userId);
+    List<GoalsView> getAllGoalsViews(@Param("userId") Long userId, @Param("isActive") boolean isActive);
 }

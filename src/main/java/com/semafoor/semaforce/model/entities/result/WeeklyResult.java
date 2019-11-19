@@ -1,6 +1,7 @@
 package com.semafoor.semaforce.model.entities.result;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.semafoor.semaforce.model.entities.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,7 +18,16 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-public class WeeklyResult {
+@NamedQueries({
+        @NamedQuery(
+                name = "WeeklyResult.findByUserAndExerciseSortByDateAscending",
+                query = "select W from WeeklyResult W " +
+                        "join W.result as R join R.exercise as E join R.user as U " +
+                        "where U.id = :userId and E.id = :exerciseId " +
+                        "order by W.createdDateTime asc"
+        )
+})
+public class WeeklyResult extends AbstractEntity {
 
     @Id
     @GeneratedValue(generator = "ID_GENERATOR")

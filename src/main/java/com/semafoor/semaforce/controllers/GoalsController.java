@@ -44,9 +44,9 @@ public class GoalsController {
         return new ResponseEntity<>(this.service.updateGoal(goals.transform()), HttpStatus.OK);
     }
 
-    @GetMapping("/view/user={id}")
-    public ResponseEntity<List<GoalsView>> getAllGoalsViewsByUserId(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(this.service.getAllGoalsViews(id));
+    @GetMapping("/view/user={id}/active={active}")
+    public ResponseEntity<List<GoalsView>> getAllGoalsViewsByUserId(@PathVariable("id") Long id, @PathVariable("active") boolean isActive) {
+        return ResponseEntity.ok(this.service.getAllGoalsViews(id, isActive));
     }
 
     @GetMapping("/user={id}")

@@ -15,7 +15,7 @@ public class Score {
 
     @NotNull(message = "Weight lifted must be set")
     @Column(nullable = false)
-    private int weightLifted;
+    private double weightLifted;
 
     @NotNull(message = "Repetitions performed must be set")
     @Column(nullable = false)
@@ -23,12 +23,12 @@ public class Score {
 
     @NotNull(message = "Rpe must be set")
     @Column(nullable = false)
-    private int rpe;
+    private double rpe;
 
     Score() {
     }
 
-    public Score(int weightLifted, int repetitionsPerformed, int rpe) {
+    public Score(double weightLifted, int repetitionsPerformed, double rpe) {
         this.weightLifted = weightLifted;
         this.repetitionsPerformed = repetitionsPerformed;
         this.rpe = rpe;

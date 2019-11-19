@@ -16,9 +16,9 @@ public class WeeklyResultDto {
     private int exerciseNumber;
     private int weekNumber;
 
-    private List<Integer> weightsLifted;
+    private List<Double> weightsLifted;
     private List<Integer> repetitionsPerformed;
-    private List<Integer> rpe;
+    private List<Double> rpe;
 
     private Long exerciseId;
 

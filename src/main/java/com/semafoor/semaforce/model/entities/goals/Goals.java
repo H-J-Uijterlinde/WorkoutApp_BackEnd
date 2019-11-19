@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
                 query = "select new com.semafoor.semaforce.model.view.GoalsView(G.id, G.title, G.subTitle, G.completionPercentage) " +
                         "from Goals G " +
                         "join G.user U " +
-                        "where U.id = :userId"
+                        "where U.id = :userId and G.active = :isActive"
         )
 })
 public abstract class Goals extends AbstractEntity {
