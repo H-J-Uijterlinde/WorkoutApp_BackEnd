@@ -56,12 +56,10 @@ public class ResultService {
                 findByUserAndExerciseSortByDateAscending(userId, exerciseId);
 
         results.stream().filter(
-                result -> (this.resultUtils.getAverageRepsPerformed(result) >= numReps - 2
-                        && this.resultUtils.getAverageRepsPerformed(result) <= numReps + 2)
+                result -> (this.resultUtils.getAverageRepsPerformed(result) >= numReps - 6
+                        && this.resultUtils.getAverageRepsPerformed(result) <= numReps + 6)
         ).forEach(
-                result -> {
-            response.addDataPoint(result.getCreatedDateTime(), this.resultUtils.getWeightForDesiredRepNumber(numReps, result));
-        });
+                result -> response.addDataPoint(result.getCreatedDateTime(), this.resultUtils.getWeightForDesiredRepNumber(numReps, result)));
 
         return response;
     }

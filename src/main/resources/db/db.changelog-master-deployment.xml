@@ -3,5 +3,26 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet id="add-isInstantWorkout-workout-table-again" author="Henk-Jan Uijterlinde"
+               objectQuotingStrategy="LEGACY">
+        <addColumn tableName="Workout"
+                   schemaName="semaforce_workout_app">
+
+            <column name="isInstantWorkout"
+                    type="boolean"
+                    defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-isInstantTrainingResult-Result-table" author="Henk-Jan Uijterlinde"
+               objectQuotingStrategy="LEGACY">
+        <addColumn tableName="Result"
+                   schemaName="semaforce_workout_app">
+
+            <column name="isInstantTrainingResult"
+                    type="boolean"
+                    defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

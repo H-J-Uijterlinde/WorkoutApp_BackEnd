@@ -99,22 +99,27 @@ public class GoalsService {
         return weeklyResultStream.filter(weeklyResults -> weeklyResults.getNumbersLifted().size() >= goal.getDesiredSets() - 1).
 
                 // filter for results where the average number of repetitions is between the desired reps of the goal
-                // plus or minus two. Or results where the average weight lifted is within a 5% margin of the desired weight
-                        filter(weeklyResult -> (this.resultUtils.getAverageRepsPerformed(weeklyResult) >= goal.getDesiredReps() - 2
-                        && this.resultUtils.getAverageRepsPerformed(weeklyResult) <= goal.getDesiredReps() + 2) ||
+                // plus or minus three. Or results where the average weight lifted is within a 5% margin of the desired weight
+                        filter(weeklyResult -> (this.resultUtils.getAverageRepsPerformed(weeklyResult) >= goal.getDesiredReps() - 6
+                        && this.resultUtils.getAverageRepsPerformed(weeklyResult) <= goal.getDesiredReps() + 6) ||
                         (this.resultUtils.getAverageWeightLifted(weeklyResult) >= goal.getDesiredWeight() - (goal.getDesiredWeight() * 0.05) &&
                                 this.resultUtils.getAverageWeightLifted(weeklyResult) <= goal.getDesiredWeight() + (goal.getDesiredWeight() * 0.05)));
     }
 
     private double calculateEstimatedTotalVolume(ExerciseGoals goal, WeeklyResult weeklyResult) {
 
-        double weightForDesiredRepNumber = this.resultUtils.getWeightForDesiredRepNumber(goal.getDesiredReps(), weeklyResult);
+        double weightForDesiredRepNumber = 0;
+
+        if (goal.getDesiredSets() == 1) {
+            weightForDesiredRepNumber = this.resultUtils.getWeightForDesiredRepNumber(goal.getDesiredReps(), weeklyResult);
+        } else if (goal.getDesiredSets() > 1) {
+            weightForDesiredRepNumber = this.resultUtils.getWeightForDesiredRepNumberForMultipleSets(goal.getDesiredReps(), weeklyResult);
+        }
 
         return Math.floor(weightForDesiredRepNumber * goal.getDesiredReps() * goal.getDesiredSets());
     }
 
-    void updateActiveGoals(TrainingDay trainingDay, List<WeeklyResultDto> weeklyResultDtos) {
-        Long userId = trainingDay.getScheduledExercises().get(1).getResults().getUser().getId();
+    void updateActiveGoals(Long userId, List<WeeklyResultDto> weeklyResultDtos) {
 
         List<Goals> goals = this.findAllGoalsByUserId(userId);
 

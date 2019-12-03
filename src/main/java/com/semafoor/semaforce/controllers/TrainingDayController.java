@@ -1,6 +1,8 @@
 package com.semafoor.semaforce.controllers;
 
 import com.semafoor.semaforce.model.dto.results.WeeklyResultDto;
+import com.semafoor.semaforce.model.dto.workout.InstantTrainingWrapperDto;
+import com.semafoor.semaforce.model.dto.workout.TrainingDayDto;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.services.TrainingDayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,16 @@ public class TrainingDayController {
     }
 
     @PostMapping("/{id}/add_results")
-    public ResponseEntity<TrainingDay> addResults(@PathVariable("id") Long id,
+    public ResponseEntity<TrainingDay> addResults(@PathVariable("id") Long trainingDayId,
                                                   @RequestBody List<WeeklyResultDto> weeklyResultDtos) {
 
-        return ResponseEntity.ok(this.trainingDayService.addWeeklyResult(id, weeklyResultDtos));
+        return ResponseEntity.ok(this.trainingDayService.addWeeklyResult(trainingDayId, weeklyResultDtos));
+    }
+
+    @PostMapping("/instant_training")
+    public ResponseEntity<TrainingDay> addNewInstantTrainingDay(@RequestBody InstantTrainingWrapperDto wrapperDto) {
+
+        return ResponseEntity.ok(this.trainingDayService.addNewInstantTrainingDay(wrapperDto.getUserId(),
+                wrapperDto.getTrainingDayDto(), wrapperDto.getWeeklyResultDtos()));
     }
 }

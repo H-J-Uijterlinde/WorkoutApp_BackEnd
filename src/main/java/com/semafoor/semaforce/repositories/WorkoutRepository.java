@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository responsible for CRUD database operations on the Exercise entity.
@@ -21,6 +22,8 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
     TrainingDay getTrainingDay(@Param("id") Long workoutId, @Param("dayNumber") int dayNumber);
 
     List<TrainingDay> getAllTrainingDaysFromWorkout(@Param("id") Long workoutId);
+
+    Optional<Workout> getInstantWorkoutByUserId(@Param("userId") Long userId);
 
     @Modifying
     void deleteAllTrainingDays(@Param("workouts") List<Workout> workouts);

@@ -34,6 +34,12 @@ import java.util.Map;
                 query = "Select T from Workout W " +
                         "join W.trainingDays as T " +
                         "where W.id = :id"
+        ),
+        @NamedQuery(
+                name = "Workout.getInstantWorkoutByUserId",
+                query = "select W from Workout W " +
+                        "join W.user as U " +
+                        "where U.id = :userId and W.isInstantWorkout = true"
         )
 })
 public class Workout extends AbstractEntity implements Serializable {
@@ -65,14 +71,18 @@ public class Workout extends AbstractEntity implements Serializable {
     @MapKey(name = "dayNumber")
     private Map<Integer, TrainingDay> trainingDays = new HashMap<>();
 
+    @NotNull(message = "Please indicate if this workout is created for instant workout purposes")
+    private boolean isInstantWorkout;
+
     Workout() {
     }
 
-    public Workout(User user, String referenceName, int numWeeks, int daysPerWeek) {
+    public Workout(User user, String referenceName, int numWeeks, int daysPerWeek, boolean isInstantWorkout) {
         this.user = user;
         this.referenceName = referenceName;
         this.numWeeks = numWeeks;
         this.daysPerWeek = daysPerWeek;
+        this.isInstantWorkout = isInstantWorkout;
     }
 
     public void addTrainingDay(TrainingDay trainingDay) {

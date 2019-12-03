@@ -36,7 +36,7 @@ public class WeeklyResult extends AbstractEntity {
     @NotNull(message = "Week number must be set")
     private int weekNumber;
 
-    @NotNull
+    @NotNull(message = "Result where this weekly result belongs to, must be set")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     @JsonBackReference

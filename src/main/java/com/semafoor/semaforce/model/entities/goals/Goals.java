@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -17,7 +18,8 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
         @NamedQuery(
                 name = "Goals.getAllGoalsViews",
-                query = "select new com.semafoor.semaforce.model.view.GoalsView(G.id, G.title, G.subTitle, G.completionPercentage) " +
+                query = "select new com.semafoor.semaforce.model.view.GoalsView(G.id, G.title, G.subTitle, " +
+                        "G.completionPercentage, G.createdDateTime, G.modifiedDateTime) " +
                         "from Goals G " +
                         "join G.user U " +
                         "where U.id = :userId and G.active = :isActive"

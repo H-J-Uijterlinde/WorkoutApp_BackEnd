@@ -20,13 +20,14 @@ public class WorkoutDto {
     private int numWeeks;
     private int daysPerWeek;
     private List<TrainingDayDto> trainingDays;
+    boolean isInstantWorkout;
 
     /**
      * Method that can be called on a WorkoutDto object, to transform it into a Workout entity
      * @return  Workout entity
      */
     public Workout transform() {
-        Workout workout = new Workout(this.user, this.referenceName, this.numWeeks, this.daysPerWeek);
+        Workout workout = new Workout(this.user, this.referenceName, this.numWeeks, this.daysPerWeek, this.isInstantWorkout);
 
         // transform all TrainingDayDto's into TrainingDay entities
         for (TrainingDayDto trainingDayDto: trainingDays) {
