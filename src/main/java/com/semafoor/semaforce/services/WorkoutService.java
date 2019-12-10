@@ -4,12 +4,15 @@ import com.google.common.collect.Lists;
 import com.semafoor.semaforce.model.entities.user.User;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.entities.workout.Workout;
+import com.semafoor.semaforce.model.view.TrainingDayView;
+import com.semafoor.semaforce.model.view.WorkoutView;
 import com.semafoor.semaforce.repositories.UserRepository;
 import com.semafoor.semaforce.repositories.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +50,23 @@ public class WorkoutService {
     @Transactional(readOnly = true)
     public List<TrainingDay> getAllTrainingDaysFromWorkout(Long id) {
         return this.repository.getAllTrainingDaysFromWorkout(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkoutView> getWorkoutViewsByUserId(Long userId) {
+        return this.repository.getWorkoutViewsByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingDayView> getTrainingDayViewsByWorkoutId(Long workoutId) {
+
+        List<TrainingDay> trainingDays = this.repository.getAllTrainingDaysFromWorkout(workoutId);
+        List<TrainingDayView> trainingDayViews = new ArrayList<>();
+        trainingDays.forEach(
+                trainingDay -> trainingDayViews.add(TrainingDayView.transformToView(trainingDay))
+        );
+
+        return trainingDayViews;
     }
 
     public Workout save(Workout workout) {

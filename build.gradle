@@ -4,7 +4,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
-		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
 	}
 }
 
@@ -16,7 +15,6 @@ plugins {
 }
 
 group = 'semafoor89'
-apply plugin: 'com.palantir.docker'
 
 version = '0.0.1-SNAPSHOT'
 
@@ -29,17 +27,6 @@ repositories {
 	mavenCentral()
 }
 
-task unpack(type: Copy) {
-	dependsOn bootJar
-	from(zipTree(tasks.bootJar.outputs.files.singleFile))
-	into("build/dependency")
-}
-docker {
-	name "${project.group}/${bootJar.baseName}"
-	copySpec.from(tasks.unpack.outputs).into("dependency")
-	buildArgs(['DEPENDENCY': "dependency"])
-}
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -47,8 +34,16 @@ dependencies {
 
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+	testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '3.0.0'
+
+	testCompile("org.assertj:assertj-core:3.14.0")
+
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.6.0-M1'
+
+
+
 
 
 	// Spring Data libraries
@@ -78,4 +73,11 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.liquibase/liquibase-core
 	compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.0'
 
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }

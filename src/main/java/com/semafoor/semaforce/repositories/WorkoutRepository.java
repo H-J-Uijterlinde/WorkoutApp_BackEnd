@@ -3,6 +3,7 @@ package com.semafoor.semaforce.repositories;
 import com.semafoor.semaforce.model.entities.user.User;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.entities.workout.Workout;
+import com.semafoor.semaforce.model.view.WorkoutView;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -24,6 +25,8 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
     List<TrainingDay> getAllTrainingDaysFromWorkout(@Param("id") Long workoutId);
 
     Optional<Workout> getInstantWorkoutByUserId(@Param("userId") Long userId);
+
+    List<WorkoutView> getWorkoutViewsByUserId(@Param("userId") Long userId);
 
     @Modifying
     void deleteAllTrainingDays(@Param("workouts") List<Workout> workouts);

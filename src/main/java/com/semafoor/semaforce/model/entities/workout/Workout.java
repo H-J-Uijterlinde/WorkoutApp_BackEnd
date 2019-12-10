@@ -40,6 +40,13 @@ import java.util.Map;
                 query = "select W from Workout W " +
                         "join W.user as U " +
                         "where U.id = :userId and W.isInstantWorkout = true"
+        ),
+        @NamedQuery(
+                name = "Workout.getWorkoutViewsByUserId",
+                query = "select new com.semafoor.semaforce.model.view.WorkoutView(W.id, W.referenceName, " +
+                        "W.numWeeks, W.daysPerWeek, W.currentDay) from Workout W " +
+                        "join W.user as U " +
+                        "where U.id = :userId and W.isInstantWorkout = false"
         )
 })
 public class Workout extends AbstractEntity implements Serializable {

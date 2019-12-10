@@ -3,6 +3,8 @@ package com.semafoor.semaforce.controllers;
 import com.semafoor.semaforce.model.dto.workout.WorkoutDto;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.entities.workout.Workout;
+import com.semafoor.semaforce.model.view.TrainingDayView;
+import com.semafoor.semaforce.model.view.WorkoutView;
 import com.semafoor.semaforce.services.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,6 +46,16 @@ public class WorkoutController {
     public ResponseEntity<List<TrainingDay>> getAllTrainingDaysByWorkoutId(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(this.workoutService.getAllTrainingDaysFromWorkout(id));
+    }
+
+    @GetMapping("/user={userId}")
+    public ResponseEntity<List<WorkoutView>> getWorkoutViewsByUserId(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(this.workoutService.getWorkoutViewsByUserId(userId));
+    }
+
+    @GetMapping("/{workoutId}/training_day_views")
+    public ResponseEntity<List<TrainingDayView>> getTrainingDayViewsByWorkoutId(@PathVariable("workoutId") Long workoutId) throws InterruptedException {
+        return ResponseEntity.ok(this.workoutService.getTrainingDayViewsByWorkoutId(workoutId));
     }
 
     @PostMapping

@@ -46,18 +46,10 @@ public class WeeklyResult extends AbstractEntity {
     @MapKeyColumn(name = "SET_NUMBER")
     private Map<Integer, Score> numbersLifted = new HashMap<>();
 
-    WeeklyResult(){}
+    public WeeklyResult(){}
 
     public WeeklyResult(int weekNumber, Map<Integer, Score> numbersLifted) {
         this.weekNumber = weekNumber;
         this.numbersLifted = numbersLifted;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public int getWeekNumber() {
-        return weekNumber;
     }
 }
