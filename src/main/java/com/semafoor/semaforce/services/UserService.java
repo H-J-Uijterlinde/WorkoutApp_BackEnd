@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This service class serves as the bridge between the data access layer and the controller layer for the User
@@ -47,22 +48,17 @@ public class UserService {
      * @return UserView object.
      */
     @Transactional(readOnly = true)
-    public UserView findUserByUsername(String username) {
-        User user = this.userRepository.findByUserName(username);
-        if (user.getCurrentWorkout() == null) {
-            return this.userRepository.findLoggedInUserNoWorkoutByUserName(username);
-        } else {
-            return userRepository.findLoggedInUserByUserName(username);
-        }
+    public UserView findUserViewByUsername(String username) {
+        return userRepository.findLoggedInUserByUserName(username);
     }
 
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElse(null);
     }
 
     @Transactional(readOnly = true)
-    public List<UserView> getLoggedInUsers() {
+    public List<UserView> getUserViews() {
         return Lists.newArrayList(this.userRepository.getLoggedInUsers());
     }
 
@@ -77,12 +73,16 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).get();
-        List<Workout> workouts = workoutRepository.findAllByUser(user);
-        for (Workout workout: workouts) {
-            workoutRepository.delete(workout);
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Workout> workouts = workoutRepository.findAllByUser(user);
+            for (Workout workout: workouts) {
+                workoutRepository.delete(workout);
+            }
+            userRepository.deleteResults(user);
+            userRepository.delete(user);
         }
-        userRepository.deleteResults(user);
-        userRepository.delete(user);
     }
 }

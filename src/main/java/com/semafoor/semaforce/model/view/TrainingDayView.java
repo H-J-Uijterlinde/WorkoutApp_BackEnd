@@ -1,22 +1,17 @@
 package com.semafoor.semaforce.model.view;
 
-import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 public class TrainingDayView {
 
-    private List<ScheduledExerciseView> scheduledExerciseViews = new ArrayList<>();
+    private Long trainingDayId;
+    private LocalDateTime createdDate;
 
-    public static TrainingDayView transformToView(TrainingDay trainingDay) {
-
-        TrainingDayView view = new TrainingDayView();
-        trainingDay.getScheduledExercises().values().forEach(
-                scheduledExercise -> view.scheduledExerciseViews.add(ScheduledExerciseView.transformToView(scheduledExercise))
-        );
-        return view;
+    public TrainingDayView(Long trainingDayId, LocalDateTime createdDate) {
+        this.trainingDayId = trainingDayId;
+        this.createdDate = createdDate;
     }
 }

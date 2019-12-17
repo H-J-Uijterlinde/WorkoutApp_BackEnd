@@ -38,14 +38,14 @@ import java.io.Serializable;
         @NamedQuery(
                 name = "User.findLoggedInUserByUserName",
                 query = "select new com.semafoor.semaforce.model.view.UserView(U.id, U.userName, U.info.email, " +
-                        "W.id, W.referenceName, W.numWeeks, W.daysPerWeek, W.currentDay) from User U " +
+                        "W.id, W.referenceName, W.numWeeks, W.daysPerWeek, W.currentDay, W.createdDateTime) from User U " +
                         "join U.currentWorkout as W " +
                         "where U.userName = :username"
         ),
         @NamedQuery(
                 name = "User.getCurrentWorkoutView",
                 query = "select new com.semafoor.semaforce.model.view.WorkoutView(W.id, W.referenceName, W.numWeeks, " +
-                        "W.daysPerWeek, W.currentDay) from User U " +
+                        "W.daysPerWeek, W.currentDay, W.createdDateTime) from User U " +
                         "join U.currentWorkout as W " +
                         "where U.id = :id"
         ),
@@ -85,7 +85,7 @@ public class User extends AbstractEntity implements Serializable {
     @JoinColumn(name = "CURRENT_WORKOUT")
     private Workout currentWorkout;
 
-    User() {
+    public User() {
     }
 
     public User(String userName, String password, AccountInfo info) {

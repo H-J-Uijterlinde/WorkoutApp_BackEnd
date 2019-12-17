@@ -53,7 +53,7 @@ public class Result extends AbstractEntity {
     @NotNull(message = "Please indicate if this results comes from an instant training workout")
     private boolean isInstantTrainingResult;
 
-    Result() {
+    public Result() {
     }
 
     public Result(User user, Exercise exercise, Map<Integer, WeeklyResult> weeklyResults) {

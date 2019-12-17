@@ -24,11 +24,11 @@ public class ScheduledExercise {
     @Column(nullable = false)
     private ExerciseConfiguration configuration;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn
     private Result results;
 
-    ScheduledExercise() {
+    public ScheduledExercise() {
 
     }
 

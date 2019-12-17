@@ -39,12 +39,13 @@ import java.util.Map;
                 name = "Workout.getInstantWorkoutByUserId",
                 query = "select W from Workout W " +
                         "join W.user as U " +
+                        "join fetch W.trainingDays " +
                         "where U.id = :userId and W.isInstantWorkout = true"
         ),
         @NamedQuery(
                 name = "Workout.getWorkoutViewsByUserId",
                 query = "select new com.semafoor.semaforce.model.view.WorkoutView(W.id, W.referenceName, " +
-                        "W.numWeeks, W.daysPerWeek, W.currentDay) from Workout W " +
+                        "W.numWeeks, W.daysPerWeek, W.currentDay, W.createdDateTime) from Workout W " +
                         "join W.user as U " +
                         "where U.id = :userId and W.isInstantWorkout = false"
         )
@@ -72,7 +73,7 @@ public class Workout extends AbstractEntity implements Serializable {
     private int currentDay;
 
     @OneToMany(mappedBy = "workout",
-            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            cascade = {CascadeType.ALL},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @MapKey(name = "dayNumber")
@@ -81,7 +82,7 @@ public class Workout extends AbstractEntity implements Serializable {
     @NotNull(message = "Please indicate if this workout is created for instant workout purposes")
     private boolean isInstantWorkout;
 
-    Workout() {
+    public Workout() {
     }
 
     public Workout(User user, String referenceName, int numWeeks, int daysPerWeek, boolean isInstantWorkout) {

@@ -28,6 +28,8 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     List<WorkoutView> getWorkoutViewsByUserId(@Param("userId") Long userId);
 
+    List<TrainingDay> getAllTrainingDaysFromInstantWorkoutByUserId(@Param("userId") Long userId);
+
     @Modifying
     void deleteAllTrainingDays(@Param("workouts") List<Workout> workouts);
 }

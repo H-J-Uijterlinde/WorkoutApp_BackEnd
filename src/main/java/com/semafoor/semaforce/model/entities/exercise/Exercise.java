@@ -52,7 +52,7 @@ public class Exercise extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    Exercise() {
+    public Exercise() {
     }
 
     public Exercise(String name, Set<Muscle> musclesTrained, MuscleGroup muscleGroup, Category category) {

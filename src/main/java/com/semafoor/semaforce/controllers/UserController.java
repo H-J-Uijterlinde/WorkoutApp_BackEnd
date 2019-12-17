@@ -35,12 +35,12 @@ public class UserController {
 
     @GetMapping("/logged_in_users")
     public ResponseEntity<List<UserView>> findAllLoggedInUsers() {
-        return ResponseEntity.ok(this.userService.getLoggedInUsers());
+        return ResponseEntity.ok(this.userService.getUserViews());
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<UserView> findByUsername(@PathVariable("username") String username) {
-        return ResponseEntity.ok(this.userService.findUserByUsername(username));
+        return ResponseEntity.ok(this.userService.findUserViewByUsername(username));
     }
 
     @GetMapping("/{id}/current_workout")

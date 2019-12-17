@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.semafoor.semaforce.model.entities.user.User;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.entities.workout.Workout;
-import com.semafoor.semaforce.model.view.TrainingDayView;
+import com.semafoor.semaforce.model.view.ScheduledExerciseViewWrapper;
 import com.semafoor.semaforce.model.view.WorkoutView;
 import com.semafoor.semaforce.repositories.UserRepository;
 import com.semafoor.semaforce.repositories.WorkoutRepository;
@@ -58,12 +58,12 @@ public class WorkoutService {
     }
 
     @Transactional(readOnly = true)
-    public List<TrainingDayView> getTrainingDayViewsByWorkoutId(Long workoutId) {
+    public List<ScheduledExerciseViewWrapper> getTrainingDayViewsByWorkoutId(Long workoutId) {
 
         List<TrainingDay> trainingDays = this.repository.getAllTrainingDaysFromWorkout(workoutId);
-        List<TrainingDayView> trainingDayViews = new ArrayList<>();
+        List<ScheduledExerciseViewWrapper> trainingDayViews = new ArrayList<>();
         trainingDays.forEach(
-                trainingDay -> trainingDayViews.add(TrainingDayView.transformToView(trainingDay))
+                trainingDay -> trainingDayViews.add(ScheduledExerciseViewWrapper.transformToView(trainingDay))
         );
 
         return trainingDayViews;
@@ -80,5 +80,10 @@ public class WorkoutService {
     public void delete(Long id) {
         Workout workout = repository.findById(id).get();
         repository.delete(workout);
+    }
+
+    // todo: add controller method
+    public List<TrainingDay> getInstantWorkoutTrainingDays(long userId) {
+        return this.repository.getAllTrainingDaysFromInstantWorkoutByUserId(userId);
     }
 }

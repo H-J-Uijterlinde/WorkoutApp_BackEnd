@@ -25,4 +25,20 @@
         </addColumn>
     </changeSet>
 
+    <changeSet author="Henk-Jan Uijterlinde"
+               id="add-abstractEntity-columns-to-TrainingDay-table"
+               objectQuotingStrategy="LEGACY">
+        <addColumn schemaName="semaforce_workout_app"
+                   tableName="TrainingDay">
+            <column name="createdBy" type="varchar(255)"
+                    value="Semafoor"/>
+            <column name="modifiedBy" type="varchar(255)"
+                    value="Semafoor"/>
+            <column name="createdDateTime" type="dateTime"
+                    value="2019-12-13 09:57:39"/>
+            <column name="modifiedDateTime" type="dateTime"
+                    value="2019-12-13 09:57:39"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

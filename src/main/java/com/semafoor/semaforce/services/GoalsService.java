@@ -119,7 +119,7 @@ public class GoalsService {
         return Math.floor(weightForDesiredRepNumber * goal.getDesiredReps() * goal.getDesiredSets());
     }
 
-    void updateActiveGoals(Long userId, List<WeeklyResultDto> weeklyResultDtos) {
+    public void updateActiveGoals(Long userId, List<WeeklyResultDto> weeklyResultDtos) {
 
         List<Goals> goals = this.findAllGoalsByUserId(userId);
 

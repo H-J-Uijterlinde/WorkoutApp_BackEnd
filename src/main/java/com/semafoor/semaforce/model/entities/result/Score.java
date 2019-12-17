@@ -4,8 +4,8 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 /**
  * Embeddable class which defines a logical composition of columns/ properties of the WeeklyResult table/ entity.
@@ -15,17 +15,17 @@ import javax.validation.constraints.NotNull;
 public class Score {
 
     @NotNull(message = "Weight lifted must be set")
-    @Min(0)
+    @PositiveOrZero(message = "Weights lifted can not be negative")
     @Column(nullable = false)
     private double weightLifted;
 
     @NotNull(message = "Repetitions performed must be set")
-    @Min(0)
+    @PositiveOrZero(message = "Repetitions performed can not be negative")
     @Column(nullable = false)
     private int repetitionsPerformed;
 
     @NotNull(message = "Rpe must be set")
-    @Min(0)
+    @PositiveOrZero(message = "Rpe can not be negative")
     @Column(nullable = false)
     private double rpe;
 

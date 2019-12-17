@@ -8,6 +8,7 @@ import com.semafoor.semaforce.model.entities.result.WeeklyResult;
 import com.semafoor.semaforce.model.entities.user.User;
 import com.semafoor.semaforce.model.entities.workout.TrainingDay;
 import com.semafoor.semaforce.model.entities.workout.Workout;
+import com.semafoor.semaforce.model.view.TrainingDayView;
 import com.semafoor.semaforce.repositories.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,20 +31,34 @@ public class TrainingDayService {
     private static final Logger logger = LoggerFactory.getLogger(TrainingDayService.class);
 
     private final TrainingDayRepository trainingDayRepository;
-    private final GoalsService goalsService;
     private final WorkoutRepository workoutRepository;
     private final UserRepository userRepository;
     private final ResultRepository resultRepository;
     private final ExerciseRepository exerciseRepository;
 
     @Autowired
-    public TrainingDayService(TrainingDayRepository trainingDayRepository, GoalsService goalsService, WorkoutRepository workoutRepository, UserRepository userRepository, ResultRepository resultRepository, ExerciseRepository exerciseRepository) {
+    public TrainingDayService(TrainingDayRepository trainingDayRepository,
+                              WorkoutRepository workoutRepository,
+                              UserRepository userRepository,
+                              ResultRepository resultRepository,
+                              ExerciseRepository exerciseRepository) {
+
         this.trainingDayRepository = trainingDayRepository;
-        this.goalsService = goalsService;
         this.workoutRepository = workoutRepository;
         this.userRepository = userRepository;
         this.resultRepository = resultRepository;
         this.exerciseRepository = exerciseRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingDayView> getTrainingDaysByInstantWorkoutAndUserId(Long userId) {
+        return this.trainingDayRepository.getTrainingDaysByInstantWorkoutAndUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public TrainingDay getTrainingDayById(Long trainingDayId) {
+        Optional<TrainingDay> optionalTrainingDay = this.trainingDayRepository.findById(trainingDayId);
+        return optionalTrainingDay.orElse(null);
     }
 
     /**
@@ -60,16 +75,15 @@ public class TrainingDayService {
 
         addWeeklyResultsToResult(weeklyResultDtos, trainingDay);
 
-        this.goalsService.updateActiveGoals(trainingDay.getWorkout().getUser().getId(), weeklyResultDtos);
-
+        // update trainingDay current week.
         trainingDay.setCurrentWeek(trainingDay.getCurrentWeek() + 1);
         return trainingDayRepository.save(trainingDay);
     }
 
     private void addWeeklyResultsToResult(List<WeeklyResultDto> weeklyResultDtos, TrainingDay trainingDay) {
+
         for (WeeklyResultDto dto: weeklyResultDtos) {
             if (trainingDay.getScheduledExercises().containsKey(dto.getExerciseNumber())) {
-                logger.debug("Adding weekly result for exercise with id: " + dto.getExerciseId() + "to regular workout results");
                 Result result = trainingDay.getScheduledExercises().get(dto.getExerciseNumber()).getResults();
                 result.addResult(dto.transform());
             } else {
@@ -94,18 +108,23 @@ public class TrainingDayService {
 
         } else {
 
+            logger.debug("Instant workout not found");
             workout = new Workout(currentUser, "Instant training day holder",
                     1, 1, true);
             trainingDay.setDayNumber(1);
 
         }
 
-        workout.addTrainingDay(trainingDay);
-        weeklyResultDtos.forEach(
-                weeklyResultDto -> this.addWeeklyResultsToInstantTrainingResult(currentUser, weeklyResultDto)
-        );
+        this.addWeeklyResultsToResult(weeklyResultDtos, trainingDay);
 
-        this.goalsService.updateActiveGoals(userId, weeklyResultDtos);
+        workout.addTrainingDay(trainingDay);
+
+
+//        weeklyResultDtos.forEach(
+//                weeklyResultDto -> this.addWeeklyResultsToInstantTrainingResult(currentUser, weeklyResultDto)
+//        );
+
+        logger.debug("Before saving, trainingday daynumber: " + trainingDay.getDayNumber() + ". Workout id: " + trainingDay.getWorkout().getId());
         this.workoutRepository.save(workout);
         return trainingDay;
     }

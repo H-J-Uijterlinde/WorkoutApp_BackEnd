@@ -33,11 +33,6 @@ public class WorkoutDto {
         for (TrainingDayDto trainingDayDto: trainingDays) {
 
             TrainingDay trainingDay = trainingDayDto.transform();
-
-            // Create a new Result entity for all ScheduledExercises
-            trainingDay.getScheduledExercises().forEach(
-                    (k,v) -> v.setResults(new Result(this.user, v.getExercise(), new HashMap<>()))
-            );
             workout.addTrainingDay(trainingDay);
         }
         return workout;
