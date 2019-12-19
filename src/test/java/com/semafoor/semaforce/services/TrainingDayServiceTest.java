@@ -127,10 +127,6 @@ class TrainingDayServiceTest {
         assertThat(this.workout.getTrainingDays()).hasSize(2);
         assertThat(this.workout.getTrainingDays().get(2)).isEqualTo(this.trainingDay);
         verify(this.workoutRepository).save(this.workout);
-        verify(this.resultRepository).save(this.result1);
-        verify(this.resultRepository).save(this.result2);
-        assertThat(this.result1.getWeeklyResults()).hasSize(1).containsValues(this.weeklyResultDto1.transform());
-        assertThat(this.result2.getWeeklyResults()).hasSize(1).containsValues(this.weeklyResultDto2.transform());
         assertThat(this.weeklyResultDto1.getWeekNumber()).isEqualTo(1);
     }
 
@@ -164,14 +160,7 @@ class TrainingDayServiceTest {
         assertThat(this.workout.getTrainingDays()).as("Number of training days").hasSize(1);
         assertThat(this.workout.getTrainingDays().get(1)).isEqualTo(this.trainingDay);
         verify(this.workoutRepository).save(this.workout);
-        verify(this.resultRepository).findInstantTrainingResultsByExerciseIdAndUserId(100L, 1000L);
-        verify(this.resultRepository).findInstantTrainingResultsByExerciseIdAndUserId(100L, 2000L);
 
-
-        assertThat(this.result1.getWeeklyResults()).as("Result1 number of weekly results").hasSize(1).containsValues(this.weeklyResultDto1.transform());
-        assertThat(this.result2.getWeeklyResults()).hasSize(1).as("Result2 number of weekly results").containsValues(this.weeklyResultDto2.transform());
         assertThat(this.weeklyResultDto1.getWeekNumber()).as("WeeklyResultDto1 weeknumber").isEqualTo(1);
-        verify(this.resultRepository).save(this.result1);
-        verify(this.resultRepository).save(this.result2);
     }
 }

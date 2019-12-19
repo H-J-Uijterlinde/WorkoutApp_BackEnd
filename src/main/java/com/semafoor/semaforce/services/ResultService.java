@@ -55,9 +55,11 @@ public class ResultService {
         List<WeeklyResult> results = this.weeklyResultRepository.
                 findByUserAndExerciseSortByDateAscending(userId, exerciseId);
 
-        results.stream().filter(
-                result -> (this.resultUtils.getAverageRepsPerformed(result) >= numReps - 3
-                        && this.resultUtils.getAverageRepsPerformed(result) <= numReps + 3)
+        results.stream()
+                .filter(result -> result.getNumbersLifted().size() > 0)
+                .filter(
+                result -> (this.resultUtils.getAverageRepsPerformed(result) >= numReps - 2
+                        && this.resultUtils.getAverageRepsPerformed(result) <= numReps + 2)
         ).forEach(
                 result -> response.addDataPoint(result.getCreatedDateTime(), this.resultUtils.getWeightForDesiredRepNumber(numReps, result)));
 

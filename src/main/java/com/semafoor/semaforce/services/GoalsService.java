@@ -99,9 +99,9 @@ public class GoalsService {
         return weeklyResultStream.filter(weeklyResults -> weeklyResults.getNumbersLifted().size() >= goal.getDesiredSets() - 1).
 
                 // filter for results where the average number of repetitions is between the desired reps of the goal
-                // plus or minus three. Or results where the average weight lifted is within a 5% margin of the desired weight
-                        filter(weeklyResult -> (this.resultUtils.getAverageRepsPerformed(weeklyResult) >= goal.getDesiredReps() - 3
-                        && this.resultUtils.getAverageRepsPerformed(weeklyResult) <= goal.getDesiredReps() + 3) ||
+                // plus or minus two. Or results where the average weight lifted is within a 5% margin of the desired weight
+                        filter(weeklyResult -> (this.resultUtils.getAverageRepsPerformed(weeklyResult) >= goal.getDesiredReps() - 2
+                        && this.resultUtils.getAverageRepsPerformed(weeklyResult) <= goal.getDesiredReps() + 2) ||
                         (this.resultUtils.getAverageWeightLifted(weeklyResult) >= goal.getDesiredWeight() - (goal.getDesiredWeight() * 0.05) &&
                                 this.resultUtils.getAverageWeightLifted(weeklyResult) <= goal.getDesiredWeight() + (goal.getDesiredWeight() * 0.05)));
     }
